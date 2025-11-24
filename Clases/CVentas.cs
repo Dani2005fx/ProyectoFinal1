@@ -1,39 +1,38 @@
-﻿using iTextSharp.text;
+﻿using Google.Protobuf.WellKnownTypes;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
-
 namespace CrudEjemplo.Clases
 {
-    internal class CClient
+    internal class CVentas
     {
-        //crear un metodo pra mostrar los usuarios 
-        public void mostrarClientes(DataGridView tablaClientes)
+        //crear un metodo pra mostrar los Ventas 
+        public void mostrarVentas(DataGridView tablaVentas)
         {
             //el try catch servira para ver si hay errores
             try
             {
                 //limpiar el DataSource del DataGridV para eliminar datos anteriores
-                tablaClientes.DataSource = null;
+                tablaVentas.DataSource = null;
                 //se crea un adaptador MySQL para ejecutar la consulta 
-                MySqlDataAdapter adapter = new MySqlDataAdapter("select * from Clientes;", CConexion.conexion());
+                MySqlDataAdapter adapter = new MySqlDataAdapter("select * from Ventas", CConexion.conexion());
                 //DataTable servira para almacenar los resultados de la consulta
-                DataTable dt = new DataTable();
+                DataTable dv = new DataTable();
                 //llena el DataTable con los datos que se  obtenidos de la consulta
-                adapter.Fill(dt);
-                tablaClientes.DataSource = dt;
+                adapter.Fill(dv);
+                tablaVentas.DataSource = dv;
 
             }
             catch (Exception ex)
@@ -42,15 +41,16 @@ namespace CrudEjemplo.Clases
             }
         }
 
-        //crear un metodo pra guardar los clientes 
-        public void guardarClientes(TextBox nombre, TextBox apellido, TextBox mail, TextBox telefono)
+
+        //crear un metodo pra guardar los Ventas 
+        public void guardarVentas(TextBox idClient, TextBox idProdut, TextBox cantidad, TextBox precioUnit, TextBox total)
         {
             //el try catch servira para ver si hay errores
             try
             {
                 //comando sql para insertar datos
-                string query = "INSERT INTO Clientes (Nombre_Cliente,Apellido_Cliente,Correo,Telefono)" +
-                    "VALUES ('" + nombre.Text + "','" + apellido.Text + "','" + mail.Text + "','" + telefono.Text + "');";
+                string query = "INSERT INTO Ventas (Codigo_Cliente,Codigo_Producto,Cantidad,Precio_Unitario,Total)" +
+                    "VALUES ('" + idClient.Text + "','" + idProdut.Text + "','" + cantidad.Text + "','" + precioUnit.Text + "','" + total.Text + "');";
 
                 MySqlConnection conexion = CConexion.conexion();
                 conexion.Open();
@@ -74,18 +74,21 @@ namespace CrudEjemplo.Clases
 
         //crear un metodo selecionar
         //método tomara los datos de una fila seleccionada en una tabla 
-        public void seleccionarClientes(DataGridView tablaUsuarios, TextBox id, TextBox nombre, TextBox apellido, TextBox mail, TextBox telefono)
+        public void seleccionarVentas(DataGridView tablaVentas, TextBox idVenta, TextBox idClient, TextBox idProdut, TextBox fechaventa, TextBox cantidad, TextBox precioUnit, TextBox total)
         {
             //el try catch servira para ver si hay errores
             try
             {
                 // Toma el valor de la celda 0 (primera columna) de la fila seleccionada y lo muestra en la caja de texto del ID
-                id.Text = tablaUsuarios.CurrentRow.Cells[0].Value.ToString();
+                idVenta.Text = tablaVentas.CurrentRow.Cells[0].Value.ToString();
                 //y los mismo con las siguientes
-                nombre.Text = tablaUsuarios.CurrentRow.Cells[1].Value.ToString();
-                apellido.Text = tablaUsuarios.CurrentRow.Cells[2].Value.ToString();
-                mail.Text = tablaUsuarios.CurrentRow.Cells[3].Value.ToString();
-                telefono.Text = tablaUsuarios.CurrentRow.Cells[4].Value.ToString();
+                idClient.Text = tablaVentas.CurrentRow.Cells[1].Value.ToString();
+                idProdut.Text = tablaVentas.CurrentRow.Cells[2].Value.ToString();
+                fechaventa.Text = tablaVentas.CurrentRow.Cells[3].Value.ToString();
+                cantidad.Text = tablaVentas.CurrentRow.Cells[4].Value.ToString();
+                precioUnit.Text = tablaVentas.CurrentRow.Cells[5].Value.ToString();
+                total.Text = tablaVentas.CurrentRow.Cells[6].Value.ToString();
+                
 
 
             }
@@ -95,15 +98,15 @@ namespace CrudEjemplo.Clases
             }
         }
 
-        //crear un metodo pra modificar los usuarios 
-        public void modificarClientes(TextBox Id, TextBox nombre, TextBox apellido, TextBox mail, TextBox telefono)
+        //crear un metodo pra modificar los ventas 
+        public void modificarVentas(TextBox idVenta, TextBox idClient, TextBox idProdut, TextBox cantidad, TextBox precioUnit, TextBox total)
         {
             //el try catch servira para ver si hay errores
             try
             {
                 //comando sql para modificar datos
-                string query = "Update  Clientes set Nombre_Cliente='"
-                    + nombre.Text + "',Apellido_Cliente='" + apellido.Text + "',Correo='" + mail.Text + "',Telefono='" + telefono.Text + "' where Codigo_Cliente='" + Id.Text + "';";
+                string query = "Update  Ventas set Codigo_Cliente='"
+                    + idClient.Text + "',Codigo_Producto='" + idProdut.Text + "',Cantidad='" + cantidad.Text + "',Precio_Unitario='" + precioUnit.Text + "',Total='" + total.Text + "' where Codigo_Venta='" + idVenta.Text + "';";
 
                 MySqlConnection conexion = CConexion.conexion();
                 conexion.Open();
@@ -125,21 +128,21 @@ namespace CrudEjemplo.Clases
             }
         }
 
-        //crear un metodo pra eliminar los Clientes 
-        public void eliminarClientes(TextBox Id)
+        //crear un metodo pra eliminar los Ventas 
+        public void eliminarVentas(TextBox idVenta)
         {
             //el try catch servira para ver si hay errores
             try
             {
                 //comando sql para modificar datos
-                string query = "delete from  Clientes where Codigo_Cliente='" + Id.Text + "';";
+                string query = "delete from  Ventas where Codigo_Venta='" + idVenta.Text + "';";
 
                 MySqlConnection conexion = CConexion.conexion();
                 conexion.Open();
                 // Ejecuta el comando en la base de datos
                 MySqlCommand mycomand = new MySqlCommand(query, conexion);
                 MySqlDataReader reader = mycomand.ExecuteReader();
-                MessageBox.Show("Se elimino correctamente el usuario");
+                MessageBox.Show("Se elimino correctamente el Ventas");
                 //muestra el recorrido del DataGridV de la tabla
                 while (reader.Read())
                 {
@@ -154,12 +157,11 @@ namespace CrudEjemplo.Clases
             }
         }
 
-        //crear un metodo para descargar reporte de clientes
-        public void reporteClientes()
+        public void reporteVentas()
         {
             try
             {
-                string query = "SELECT * FROM Clientes;";
+                string query = "SELECT * FROM Ventas;";
                 string ruta = "C:\\Users\\Daniel\\PDF\\";
 
 
@@ -183,9 +185,9 @@ namespace CrudEjemplo.Clases
 
 
                 Document doc = new Document(PageSize.A4);
-                PdfWriter.GetInstance(doc, new FileStream(ruta + "ReporteClientes.pdf", FileMode.Create));
+                PdfWriter.GetInstance(doc, new FileStream(ruta + "ReporteVentas.pdf", FileMode.Create));
                 doc.Open();
-                PdfPCell titulo = new PdfPCell(new Phrase("Reporte de Clientes\n\n", FontFactory.GetFont("Arial", 16, Font.BOLD)));
+                PdfPCell titulo = new PdfPCell(new Phrase("Reporte de Ventas\n\n", FontFactory.GetFont("Arial", 16, Font.BOLD)));
                 titulo.VerticalAlignment = Element.ALIGN_CENTER;
                 titulo.HorizontalAlignment = Element.ALIGN_CENTER;
                 titulo.Border = 0;
@@ -229,15 +231,16 @@ namespace CrudEjemplo.Clases
                 doc.Close();
 
                 // Lógica para generar y descargar el reporte de clientes
-                MessageBox.Show("Reporte de clientes descargado correctamente.");
-                System.Diagnostics.Process.Start(ruta + "ReporteClientes.pdf");
+                MessageBox.Show("Reporte de Ventas descargado correctamente.");
+                System.Diagnostics.Process.Start(ruta + "ReporteVentas.pdf");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al descargar el reporte de clientes: " + ex.ToString());
+                MessageBox.Show("Error al descargar el reporte de Ventas: " + ex.ToString());
             }
         }
 
-
     }
 }
+    
+

@@ -1,5 +1,6 @@
-﻿using CrudEjemplo.Clases;
-using System;
+﻿using System;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,30 +10,31 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using System.IO;
+using CrudEjemplo.Clases;
 
 namespace CrudEjemplo
 {
-    public partial class Form2 : Form
+    public partial class FormReportes : Form
     {
         private bool ventana = false;
-        public Form2()
+
+        public FormReportes()
         {
             InitializeComponent();
         }
+
+
 
         private void Salirbtn_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void Minimizarbtn_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
         private void Maximizarbtn_Click(object sender, EventArgs e)
         {
-            ventana =! ventana;
+            ventana = !ventana;
             if (ventana)
             {
                 this.MaximumSize = Screen.FromControl(this).WorkingArea.Size;
@@ -45,8 +47,13 @@ namespace CrudEjemplo
                 this.WindowState = FormWindowState.Normal;
                 Maximizarbtn.Image = CrudEjemplo.Properties.Resources.maxi;
             }
-            
 
+
+        }
+
+        private void Minimizarbtn_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -61,11 +68,50 @@ namespace CrudEjemplo
             Maximizarbtn.Image = CrudEjemplo.Properties.Resources.maxi;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Clientes_Click(object sender, EventArgs e)
         {
-            FormClient llamar = new FormClient();
+            FormCliente llamar = new FormCliente();
             llamar.Show();
             this.Hide();
+        }
+
+        private void Productos_Click(object sender, EventArgs e)
+        {
+            FormProductos llamar = new FormProductos();
+            llamar.Show();
+            this.Hide();
+        }
+
+        private void Ventas_Click(object sender, EventArgs e)
+        {
+            FormVentas llamar = new FormVentas();
+            llamar.Show();
+            this.Hide();
+        }
+
+        private void Reportes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DescargarCliente_Click(object sender, EventArgs e)
+        {
+            CClient cliente = new CClient();
+            cliente.reporteClientes();
+        }
+
+        
+
+        private void btnAgregar_Click(object sender, EventArgs e)
+        {
+            CProducts producto = new CProducts();
+            producto.reporteProductos();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CVentas ventas = new CVentas();
+            ventas.reporteVentas();
         }
     }
 }

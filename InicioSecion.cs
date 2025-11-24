@@ -12,10 +12,10 @@ using System.Windows.Forms;
 
 namespace CrudEjemplo
 {
-    public partial class Form1 : Form
+    public partial class InicioSecion: Form
     {
-        private bool showContra = false;
-        public Form1()
+        private bool showContra = false;        
+        public InicioSecion()
         {
             InitializeComponent();
         }
@@ -148,7 +148,7 @@ namespace CrudEjemplo
                 //aqui se comprueba si estamos en la fila correcta y nos enviara al siguiente form
                 else if (count > 0)
                 {
-                    Form2 llamar = new Form2();
+                    FormCliente llamar = new FormCliente();
                     llamar.Show();
                     this.Hide();
                 }
