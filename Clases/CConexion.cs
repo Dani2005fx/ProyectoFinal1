@@ -16,7 +16,7 @@ namespace CrudEjemplo.Clases
             string servidor = "localhost";
             string bd = "cafeteria";
             string usuario = "root";
-            string contraseña = "";
+            string contraseña = "root";
             string puerto = "3306";
 
             string cadenaConexion = "server=" + servidor + ";" + "port=" + puerto + ";" + "user id=" + usuario + ";" + "password=" + contraseña + ";" + "database=" + bd + ";";

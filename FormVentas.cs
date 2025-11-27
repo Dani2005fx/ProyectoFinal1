@@ -303,5 +303,10 @@ namespace CrudEjemplo
             Reportes.Show();
             this.Hide();
         }
+
+        private void Contenedor_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

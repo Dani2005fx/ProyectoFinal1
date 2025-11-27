@@ -20,9 +20,14 @@ namespace CrudEjemplo
         private void DocVentas_Load(object sender, EventArgs e)
         {
             //cargar los datos en la interfaz
-            Clases.CVentas objetoVentas = new Clases.CVentas();
+            Clases.CDocVentas objetoCVentas = new Clases.CDocVentas();
             //llamar el metodo y incorporar el parametro DataGridView
-            objetoVentas.mostrarVentas(dataGridView1);
+            objetoCVentas.mostrarVentas(dataGridView1);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
